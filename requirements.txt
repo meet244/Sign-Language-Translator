@@ -1,0 +1,7 @@
+customtkinter
+csv
+tkinter
+opencv-python
+Pillow
+mediapipe
+model
