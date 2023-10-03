@@ -9,22 +9,22 @@ import itertools
 import copy
 from datetime import datetime
 
-
+# Function to calculate the landmark points from an image
 def calc_landmark_list(image, landmarks):
     image_width, image_height = image.shape[1], image.shape[0]
 
     landmark_point = []
 
-    # Keypoint
+    # Iterate over each landmark and convert its coordinates
     for _, landmark in enumerate(landmarks.landmark):
         landmark_x = min(int(landmark.x * image_width), image_width - 1)
         landmark_y = min(int(landmark.y * image_height), image_height - 1)
-        # landmark_z = landmark.z
 
         landmark_point.append([landmark_x, landmark_y])
 
     return landmark_point
 
+# Function to preprocess landmark data
 def pre_process_landmark(landmark_list):
     temp_landmark_list = copy.deepcopy(landmark_list)
 
@@ -51,31 +51,31 @@ def pre_process_landmark(landmark_list):
 
     return temp_landmark_list
 
-
+# Load the KeyPointClassifier model
 keypoint_classifier = KeyPointClassifier()
 
-with open('model/keypoint_classifier/label.csv',
-              encoding='utf-8-sig') as f:
-        keypoint_classifier_labels = csv.reader(f)
-        keypoint_classifier_labels = [
-            row[0] for row in keypoint_classifier_labels
-        ]
+# Read labels from a CSV file
+with open('model/keypoint_classifier/label.csv', encoding='utf-8-sig') as f:
+    keypoint_classifier_labels = csv.reader(f)
+    keypoint_classifier_labels = [
+        row[0] for row in keypoint_classifier_labels
+    ]
 
+# Set the appearance mode and color theme for the custom tkinter library
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
-#window
+
+# Create the main window
 window = ctk.CTk()
 window.geometry('1080x1080')
 window.title("HAND SIGNS")
 prev = ""
 
+# Function to open the camera and perform hand gesture recognition
 def open_camera1():
     global prev
     width, height = 800, 600
     with mphands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5,static_image_mode=False) as hands:
-            # key = cv2.waitKey(10)
-            # if key == 27:  # ESC
-            #     exit()
             
             _, frame = vid.read()
             opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -98,39 +98,21 @@ def open_camera1():
                         letter.configure(text=cur)
                     elif(cur):
                         prev = cur
-
-
-                    # #for coordinates
-                    # for point in mphands.HandLandmark:
-                    #      normalizedLandmark = lm.landmark[point]
-                    #      pixelCoordinatesLandmark = mpdrawing._normalized_to_pixel_coordinates(normalizedLandmark.x, normalizedLandmark.y, imgw, imgh)
-                    #     #  text.insert(END,point)
-                    #     #  text.insert(END,pixelCoordinatesLandmark)
-                    #     #  text.insert(END,normalizedLandmark)
-                    #      print(point)
-                    #      print(pixelCoordinatesLandmark)
-                    #      print(normalizedLandmark)
-                    
-    
-            # print(frame.shape)
+                   
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
             frame = cv2.flip(frame,1)
             captured_image = Image.fromarray(frame)
             my_image = ctk.CTkImage(dark_image=captured_image,size=(340,335))
-            # photo_image = ImageTk.PhotoImage(image=captured_image)
-            # video_lable.photo_image = photo_image
             video_lable.configure(image=my_image)
-            # if Camera_feed_start.cget('text') == 'STOP':
-            #     vid.release()
-            #     cv2.destroyAllWindows()
-            #     return
             video_lable.after(10, open_camera1)
 
+# Initialize the video capture
 vid = cv2.VideoCapture(0)
 mphands = mp.solutions.hands
 mpdrawing = mp.solutions.drawing_utils
 width, height = 600, 500
 
+# Create the title label
 i = 0
 title = ctk.CTkFont(
      family='Consolas',
@@ -147,6 +129,7 @@ Label = ctk.CTkLabel(
      corner_radius= 8)
 Label.pack(side = ctk.TOP,fill=ctk.X,pady=(10,4),padx=(10,10))
 
+# Create the main frame
 main_frame = ctk.CTkFrame(master=window,
                           height=770,
                           corner_radius=8
@@ -154,29 +137,29 @@ main_frame = ctk.CTkFrame(master=window,
 
 main_frame.pack(fill = ctk.X , padx=(10,10),pady=(5,0))
 MyFrame1=ctk.CTkFrame(master=main_frame,
-                    # width = 540,
                      height = 375,
-                     width=365,
-                     #fg_color ='red'
-                     ) # my custom object
+                     width=365
+                     )
 MyFrame1.pack(fill = ctk.BOTH,expand=ctk.TRUE,side = ctk.LEFT,padx = (10,10),pady=(10,10))
 
+# Create the video frame
 video_frame = ctk.CTkFrame(master=MyFrame1,height=340,width=365,corner_radius=12)
 video_frame.pack(side=ctk.TOP,fill=ctk.BOTH,expand = ctk.TRUE ,padx=(10,10),pady=(10,5))
 
+# Create the video label
 video_lable = ctk.CTkLabel(master=video_frame, text='',height=340,width=365,corner_radius=12)
 video_lable.pack(fill=ctk.BOTH,padx=(0,0),pady=(0,0))
 
+# Create a button to start the camera feed
 Camera_feed_start= ctk.CTkButton(master=MyFrame1,text='START',height=40,width=250,border_width=0,corner_radius=12,command=lambda : open_camera1())
 Camera_feed_start.pack(side = ctk.TOP,pady=(5,10))
 
 MyFrame2=ctk.CTkFrame(master=main_frame,
-                    # width=540,
-                     height=375,
-                     #fg_color='blue'
-                     ) # my custom object
+                     height=375
+                     ) 
 MyFrame2.pack(fill = ctk.BOTH,side=ctk.LEFT,expand = ctk.TRUE,padx = (10,10),pady=(10,10))
 
+# Create a font for displaying letters
 myfont = ctk.CTkFont(
      family='Consolas',
      weight='bold',
@@ -186,17 +169,17 @@ letter = ctk.CTkLabel(MyFrame2,
                           font=myfont,fg_color='#2B2B2B',justify=ctk.CENTER)
 letter.pack(fill = ctk.BOTH,side=ctk.LEFT,expand = ctk.TRUE,padx = (10,10),pady=(10,10))
 letter.configure(text='')
+
 MyFrame3=ctk.CTkFrame(master=window,
-                    # width=540,
                      height=175,
-                     #fg_color='blue'
                      corner_radius=12
-                     ) # my custom object
+                     )
 MyFrame3.pack(fill = ctk.X,expand = ctk.TRUE,padx = (10,10),pady=(10,10))
 
-
+# Create a textbox for displaying a sentence
 Sentence = ctk.CTkTextbox(MyFrame3,
                           font=("Consolas",24))
 Sentence.pack(fill = ctk.X,side=ctk.LEFT,expand = ctk.TRUE,padx = (10,10),pady=(10,10))
 
+# Start the tkinter main loop
 window.mainloop()
