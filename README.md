@@ -2,9 +2,7 @@
 
 ### Translate sign language to text with camera and python (GUI and ML) 📷🤖📝
 
-
-https://github.com/meet244/Sign-Language-Translator/assets/83262693/13143fda-8223-4294-b795-a3991be322c3
-
+https://github.com/meet244/Sign-Language-Translator/assets/83262693/8020b9f0-6c23-4af4-a43c-bae3d59a8899
 
 ## Problem Statement 🧩
 
@@ -26,8 +24,7 @@ Develop an innovative system that utilizes camera technology in web and mobile a
 
 We first understood how sign language functions and what the signs for India. Here's the signs we made this project for and you can try this out : 
 
-![signs](https://github.com/meet244/Sign-Language-Translator/assets/83262693/e4b45c29-623a-4ae6-a640-ce4ca4f25cdd)
-
+![signs](https://github.com/meet244/Sign-Language-Translator/assets/83262693/30087850-85a3-4850-bdc4-fbe3daf87cc6)
 
 We solved this problem by implementing a comprehensive system that combines customtkinter (an enhanced version of tkinter), Mediapipe for hand sign recognition, and TensorFlow for machine learning to recognize signs. Here's a more detailed breakdown of our solution:
 
